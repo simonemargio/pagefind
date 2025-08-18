@@ -53,6 +53,8 @@ If word stemming is unsupported, search results won't match across root words. I
 | Māori — `mi`      | ✅               | ❌             |
 | Nepali — `ne`     | ❌               | ✅             |
 | Norwegian — `no`  | ✅               | ✅             |
+| Norwegian (bokmål) — `nb`  | ✅      | ✅             |
+| Norwegian (nynorsk) — `nn` | ✅      | ✅             |
 | Polish — `pl`     | ✅               | ❌             |
 | Portuguese — `pt` | ✅               | ✅             |
 | Romanian — `ro`   | ❌               | ✅             |
