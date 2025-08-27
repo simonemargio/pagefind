@@ -1,4 +1,4 @@
-module github.com/cloudcannon/pagefind/docs
+module github.com/pagefind/pagefind/docs
 
 go 1.18
 
