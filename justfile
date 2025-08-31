@@ -19,7 +19,9 @@ install:
     cd pagefind_ui/modular && npm i
     cd pagefind_playground && npm i
     cd wrappers/node && npm i
-    cd wrappers/python && (command -v poetry >/dev/null 2>&1 && poetry install || (pip3 install --user poetry && python3 -m poetry install))
+    cd wrappers/python && (python3 -m poetry install 2>/dev/null || (python3 -m pip install --user poetry && python3 -m poetry install))
+    # Install Python linting tools - using python -m to avoid PATH issues
+    python3 -m pip install --user mypy ruff
     rustup target add wasm32-unknown-unknown
     rustup toolchain install nightly
     rustup component add rust-src --toolchain nightly
@@ -63,10 +65,13 @@ test:
 # Format code
 fmt:
     cargo +nightly fmt
+    cd wrappers/python && python3 -m ruff format
 
 # Lint everything
 lint:
     cargo clippy --all
+    cd wrappers/python && python3 -m mypy src scripts
+    cd wrappers/python && python3 -m ruff check
 
 # Start UI development server (default UI)
 dev-ui:
