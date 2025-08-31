@@ -8,7 +8,7 @@
     "build-coupled": "node ./build.js",
     "test": "ava"
   },
-  "author": "Cloudcannon",
+  "author": "Pagefind",
   "license": "MIT",
   "devDependencies": {
     "ava": "^5.3.1",
