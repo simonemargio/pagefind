@@ -195,9 +195,11 @@ class PagefindService(AbstractAsyncContextManager["PagefindService"]):
         log.debug("waiting for all responses to be resolved")
         try:
             # wait at most 5s for all responses to be resolved
-            async with asyncio.timeout(5):
-                await asyncio.gather(*self._responses.values())
-                log.debug("all responses resolved")
+            await asyncio.wait_for(
+                asyncio.gather(*self._responses.values()),
+                timeout=5
+            )
+            log.debug("all responses resolved")
         except asyncio.TimeoutError:
             log.error("timed out waiting for responses to be resolved")
         self._poll_task.cancel()
