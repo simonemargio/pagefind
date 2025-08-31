@@ -21,7 +21,7 @@ install:
     cd wrappers/node && npm i
     cd wrappers/python && (python3 -m poetry install 2>/dev/null || (python3 -m pip install --user poetry && python3 -m poetry install))
     # Install Python linting tools - using python -m to avoid PATH issues
-    python3 -m pip install --user mypy ruff
+    python3 -m pip install --user mypy ruff==0.12.11
     rustup target add wasm32-unknown-unknown
     rustup toolchain install nightly
     rustup component add rust-src --toolchain nightly
