@@ -1,8 +1,8 @@
 ---
 title: "Migrating to Pagefind 1.0"
 nav_title: "Migrating to Pagefind 1.0"
-nav_section: Resources
-weight: 81
+nav_section: Hidden
+weight: 0
 ---
 
 Migrating from Pagefind 0.x to Pagefind 1.0 will work seamlessly in almost all cases, but there are some things to be aware of.
