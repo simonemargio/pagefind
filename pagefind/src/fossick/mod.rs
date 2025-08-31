@@ -394,9 +394,8 @@ impl Fossicker {
                             let per_weight = if *word_weight == 0 {
                                 0
                             } else {
-                                (word_weight
-                                    / part_words.len().try_into().unwrap_or(std::u8::MAX))
-                                .max(1)
+                                (word_weight / part_words.len().try_into().unwrap_or(std::u8::MAX))
+                                    .max(1)
                             };
 
                             // Only index two+ character words
@@ -926,7 +925,7 @@ mod tests {
             )])
         );
     }
-    
+
     #[tokio::test]
     async fn parse_zero_weighted_compound_words() {
         let mut f = test_fossick(
