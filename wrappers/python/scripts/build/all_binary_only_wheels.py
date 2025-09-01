@@ -87,9 +87,9 @@ if __name__ == "__main__":
         certified = find_bins(bin_dir)
     if tag_name is None:
         raise ValueError("tag_name is None")
-    assert re.match(
-        r"^v\d+\.\d+\.\d+(-\w+\.?\d*)?", tag_name
-    ), f"Invalid tag_name: {tag_name}"
+    assert re.match(r"^v\d+\.\d+\.\d+(-\w+\.?\d*)?", tag_name), (
+        f"Invalid tag_name: {tag_name}"
+    )
     check_platforms(certified)
 
     if not dry_run:

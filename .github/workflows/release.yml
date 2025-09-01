@@ -301,8 +301,8 @@ jobs:
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@v2
         with:
-          application_id: ${{ secrets.CC_OSS_BOT_ID }}
-          application_private_key: ${{ secrets.CC_OSS_BOT_PEM }}
+          application_id: ${{ secrets.PF_BOT_ID }}
+          application_private_key: ${{ secrets.PF_BOT_PEM }}
 
       - name: Clone
         uses: actions/checkout@v4
@@ -345,7 +345,7 @@ jobs:
         id: push_changes
         with:
           route: PUT /repos/{owner}/{repo}/contents/CHANGELOG.md
-          owner: cloudcannon
+          owner: pagefind
           repo: pagefind
           branch: main
           message: Changelog for ${{ env.GIT_VERSION }}
@@ -359,7 +359,7 @@ jobs:
         id: merge_docs
         with:
           route: POST /repos/{owner}/{repo}/merges
-          owner: cloudcannon
+          owner: pagefind
           repo: pagefind
           base: production-docs
           head: main
@@ -371,7 +371,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/') && env.GIT_TAG == 'latest'
         with:
-          repository: cloudcannon/pagefind
+          repository: pagefind/pagefind
           prerelease: false
           body_path: RELEASE.md
           files: |
@@ -382,7 +382,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/') && env.GIT_TAG != 'latest'
         with:
-          repository: cloudcannon/pagefind-beta
+          repository: pagefind/pagefind-beta
           prerelease: true
           body_path: RELEASE.md
           files: |

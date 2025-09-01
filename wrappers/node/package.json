@@ -7,7 +7,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CloudCannon/pagefind"
+    "url": "https://github.com/pagefind/pagefind"
   },
   "exports": {
     ".": {
@@ -16,7 +16,7 @@
     }
   },
   "types": "types/index.d.ts",
-  "author": "CloudCannon",
+  "author": "Pagefind",
   "license": "MIT",
   "optionalDependencies": {
     "@pagefind/linux-x64": "0.0.0",
@@ -26,9 +26,6 @@
     "@pagefind/windows-x64": "0.0.0"
   },
   "keywords": [
-    "CloudCannon",
-    "Cloud",
-    "Cannon",
     "jamstack",
     "static",
     "search",
@@ -37,9 +34,9 @@
     "find"
   ],
   "bugs": {
-    "url": "https://github.com/CloudCannon/pagefind/issues"
+    "url": "https://github.com/pagefind/pagefind/issues"
   },
-  "homepage": "https://github.com/CloudCannon/pagefind#readme",
+  "homepage": "https://github.com/pagefind/pagefind#readme",
   "devDependencies": {
     "@types/node": "^20.4.5"
   }
