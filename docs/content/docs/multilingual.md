@@ -26,9 +26,9 @@ If word stemming is unsupported, search results won't match across root words. I
 | Language          | UI Translations | Word Stemming |
 |-------------------|-----------------|---------------|
 | Afrikaans — `af`  | ✅               | ❌             |
-| Arabic — `ar`     | ❌               | ✅             |
+| Arabic — `ar`     | ✅               | ✅             |
 | Armenian — `hy`   | ❌               | ✅             |
-| Basque — `eu`     | ❌               | ✅             |
+| Basque — `eu`     | ✅               | ✅             |
 | Bengali — `bn`    | ✅               | ❌             |
 | Catalan — `ca`    | ✅               | ✅             |
 | Chinese — `zh`    | ✅               | See below     |
@@ -42,6 +42,7 @@ If word stemming is unsupported, search results won't match across root words. I
 | Galician — `gl`   | ✅               | ❌             |
 | German — `de`     | ✅               | ✅             |
 | Greek — `el`      | ❌               | ✅             |
+| Hebrew — `he`     | ✅               | ❌             |
 | Hindi — `hi`      | ✅               | ✅             |
 | Hungarian — `hu`  | ✅               | ✅             |
 | Indonesian — `id` | ✅               | ✅             |
@@ -51,19 +52,24 @@ If word stemming is unsupported, search results won't match across root words. I
 | Korean — `ko`     | ✅               | ❌             |
 | Lithuanian — `lt` | ❌               | ✅             |
 | Māori — `mi`      | ✅               | ❌             |
+| Myanmar — `my`    | ✅               | ❌             |
 | Nepali — `ne`     | ❌               | ✅             |
 | Norwegian — `no`  | ✅               | ✅             |
 | Norwegian (bokmål) — `nb`  | ✅      | ✅             |
 | Norwegian (nynorsk) — `nn` | ✅      | ✅             |
+| Persian — `fa`    | ✅               | ❌             |
 | Polish — `pl`     | ✅               | ❌             |
 | Portuguese — `pt` | ✅               | ✅             |
-| Romanian — `ro`   | ❌               | ✅             |
+| Romanian — `ro`   | ✅               | ✅             |
 | Russian — `ru`    | ✅               | ✅             |
 | Serbian — `sr`    | ✅               | ✅             |
 | Spanish — `es`    | ✅               | ✅             |
+| Swahili — `sw`    | ✅               | ❌             |
 | Swedish — `sv`    | ✅               | ✅             |
 | Tamil — `ta`      | ✅               | ✅             |
+| Thai — `th`       | ✅               | ❌             |
 | Turkish — `tr`    | ✅               | ✅             |
+| Ukrainian — `uk`  | ✅               | ❌             |
 | Vietnamese — `vi` | ✅               | ❌             |
 | Yiddish — `yi`    | ❌               | ✅             |
 

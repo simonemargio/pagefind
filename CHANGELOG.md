@@ -37,13 +37,13 @@
 * Added Burmese (my) translations (PR #768 — thanks @harrymkt !)
 
 ### Everything Else
-* Added a development `justfile`, and improved CONTRIBUTING.md. Hint hint
+* Added a development `justfile`, and improved CONTRIBUTING.md (hint hint)
 * The Pagefind JavaScript should support running in Node.js a bit better (PR #828 — thanks @justsml !)
 
 ### Looking Forward
 👋 from @bglw — I thought I'd add a new section to these release notes talking about what's next.
 
-The biggest item on my list is to improve the relevance of the Pagefind search results. With the current setup, you can tweak enough settings to get decent results for a given site, but it needs to live up more to the goal of working more-than-good enough out of the box.
+The biggest item on my list is to improve the relevance of the Pagefind search results. With the current setup, you can tweak enough settings to get decent results for a given site, but it needs to better meet the goal of working more-than-good-enough out of the box.
 
 The second-biggest item is to fill out the Modular UI and transition the default Pagefind experience to use that. This has been pending for a long time, and will be a much better base for those who wish to customize their search more than the Default UI currently allows.
 
