@@ -394,9 +394,8 @@ impl Fossicker {
                             let per_weight = if *word_weight == 0 {
                                 0
                             } else {
-                                (word_weight
-                                    / part_words.len().try_into().unwrap_or(std::u8::MAX))
-                                .max(1)
+                                (word_weight / part_words.len().try_into().unwrap_or(std::u8::MAX))
+                                    .max(1)
                             };
 
                             // Only index two+ character words
@@ -596,7 +595,9 @@ fn get_stemmer(lang: &str) -> Option<Stemmer> {
         "ga" => Some(Stemmer::create(Algorithm::Irish)),
         "it" => Some(Stemmer::create(Algorithm::Italian)),
         "lt" => Some(Stemmer::create(Algorithm::Lithuanian)),
+        "nb" => Some(Stemmer::create(Algorithm::Norwegian)),
         "ne" => Some(Stemmer::create(Algorithm::Nepali)),
+        "nn" => Some(Stemmer::create(Algorithm::Norwegian)),
         "no" => Some(Stemmer::create(Algorithm::Norwegian)),
         "pt" => Some(Stemmer::create(Algorithm::Portuguese)),
         "ro" => Some(Stemmer::create(Algorithm::Romanian)),
@@ -924,7 +925,7 @@ mod tests {
             )])
         );
     }
-    
+
     #[tokio::test]
     async fn parse_zero_weighted_compound_words() {
         let mut f = test_fossick(
