@@ -47,6 +47,8 @@ The biggest item on my list is to improve the relevance of the Pagefind search r
 
 The second-biggest item is to fill out the Modular UI and transition the default Pagefind experience to use that. This has been pending for a long time, and will be a much better base for those who wish to customize their search more than the Default UI currently allows.
 
+Releases also now trigger a GitHub Discussion to be created, so please drop any general thoughts, comments, or feedback there 🙂
+
 ## v1.3.0 (December 18, 2024)
 
 ### Core Features & Improvements
