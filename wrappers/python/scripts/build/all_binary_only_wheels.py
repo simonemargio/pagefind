@@ -50,7 +50,7 @@ def check_platforms(certified: List[Path]) -> None:
     for compressed_archive in certified:
         llvm_triple = get_llvm_triple(compressed_archive)
         platform = LLVM_TRIPLES_TO_PYTHON_WHEEL_PLATFORMS.get(llvm_triple)
-        if platform is None:
+        if platform is None and llvm_triple != "x86_64-unknown-freebsd":
             unsupported.append(llvm_triple)
     if unsupported:
         err_message = "Unsupported platforms:\n" + "\n".join(sorted(unsupported))
@@ -103,10 +103,14 @@ if __name__ == "__main__":
         log.info("Processing %s", tar_gz)
         llvm_triple = get_llvm_triple(tar_gz)
         log.debug("llvm_triple=%s", llvm_triple)
-        platform = LLVM_TRIPLES_TO_PYTHON_WHEEL_PLATFORMS[llvm_triple]
-        log.debug("platform=%s", platform)
+        platform = LLVM_TRIPLES_TO_PYTHON_WHEEL_PLATFORMS.get(llvm_triple)
         if platform is None:
-            raise ValueError(f"Unsupported platform: {llvm_triple}")
+            if llvm_triple == "x86_64-unknown-freebsd":
+                log.info("Skipping FreeBSD platform (not supported by PyPI)")
+                continue
+            else:
+                raise ValueError(f"Unsupported platform: {llvm_triple}")
+        log.debug("platform=%s", platform)
         # TODO: avoid writing the extracted bin to disk
         name = tar_gz.name.removesuffix(".tar.gz")
         with tempfile.TemporaryDirectory(prefix=name + "~") as _temp_dir:
