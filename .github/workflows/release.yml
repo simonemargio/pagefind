@@ -379,6 +379,7 @@ jobs:
           repository: pagefind/pagefind
           prerelease: false
           body_path: RELEASE.md
+          discussion_category_name: Announcements
           files: |
             build-artifacts/*
         env:
@@ -390,6 +391,7 @@ jobs:
           repository: pagefind/pagefind-beta
           prerelease: true
           body_path: RELEASE.md
+          discussion_category_name: Announcements
           files: |
             build-artifacts/*
         env:
