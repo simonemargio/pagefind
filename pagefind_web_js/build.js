@@ -41,6 +41,18 @@ const build = async () => {
     esbuildVendorHighlightOptions,
   );
   console.log(`Vendor Highlight Build: `, compiledVendorHighlight);
+
+  // Worker build
+  const esbuildWorkerOptions = {
+    ...commonOpts,
+    entryPoints: [path.join(__dirname, "lib/pagefind_worker.ts")],
+    entryNames: `[name].${version}`,
+    outdir: path.join(__dirname, `../pagefind/vendor/`),
+    format: "iife",
+    target: "es2020",
+  };
+  const compiledWorker = await esbuild.build(esbuildWorkerOptions);
+  console.log(`Worker Build: `, compiledWorker);
 };
 
 build();

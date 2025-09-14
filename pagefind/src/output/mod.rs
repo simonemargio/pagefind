@@ -66,6 +66,12 @@ const HIGHLIGHT_JS: &[u8] = include_bytes!(concat!(
     env!("CARGO_PKG_VERSION"),
     ".js"
 ));
+const WORKER_JS: &[u8] = include_bytes!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/vendor/pagefind_worker.",
+    env!("CARGO_PKG_VERSION"),
+    ".js"
+));
 
 pub struct LanguageMeta {
     pub page_count: usize,
@@ -107,6 +113,14 @@ async fn write_common(
         .write(&mut js)
         .expect("Minifying Pagefind JS failed");
 
+    let mut worker_js = vec![];
+    minify(&format!(
+        "{js_version}\n{WEB_JS}\n{}",
+        String::from_utf8_lossy(WORKER_JS)
+    ))
+    .write(&mut worker_js)
+    .expect("Minifying Pagefind Worker JS failed");
+
     let entry_meta = entry::PagefindEntryMeta {
         version: PAGEFIND_VERSION,
         languages: HashMap::from_iter(language_indexes.into_iter().map(|i| {
@@ -139,6 +153,12 @@ async fn write_common(
         write(
             outdir.join("pagefind-highlight.js"),
             vec![HIGHLIGHT_JS],
+            Compress::None,
+            write_behavior,
+        ),
+        write(
+            outdir.join("pagefind-worker.js"),
+            vec![&worker_js],
             Compress::None,
             write_behavior,
         ),

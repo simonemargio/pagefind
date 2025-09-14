@@ -122,6 +122,8 @@ declare global {
     }[];
     /** Verbose information on stemming returned in the Pagefind Playground */
     search_keywords?: string[];
+    /** Verbose information on what environment the Pagefind search was executed in [worker, mainthread] */
+    search_environment?: string;
   };
 
   /** A single result from a search query, before actual data has been loaded */

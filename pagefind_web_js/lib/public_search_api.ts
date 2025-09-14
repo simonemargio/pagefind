@@ -1,11 +1,35 @@
-import { Pagefind } from "./coupled_search.js";
+import { PagefindWrapper } from "./search_wrapper.js";
 
-let pagefind: Pagefind | undefined = undefined;
+let pagefind: PagefindWrapper | undefined = undefined;
 let initial_options: PagefindIndexOptions | undefined = undefined;
 
 const init_pagefind = () => {
   if (!pagefind) {
-    pagefind = new Pagefind(initial_options ?? {});
+    let basePath = initial_options?.basePath;
+
+    // Derive basePath if not explicitly provided
+    if (!basePath && typeof import.meta.url !== "undefined") {
+      let derivedBasePath = import.meta.url.match(
+        /^(?:https?:\/\/[^/]+)?(.*\/)pagefind.*\.js.*$/,
+      )?.[1];
+      if (derivedBasePath) {
+        basePath = derivedBasePath;
+      }
+    }
+
+    let language = "unknown";
+    if (typeof document !== "undefined" && document?.querySelector) {
+      const langCode =
+        document.querySelector("html")?.getAttribute("lang") || "unknown";
+      language = langCode.toLowerCase();
+    }
+
+    pagefind = new PagefindWrapper({
+      ...initial_options,
+      basePath,
+      language,
+      primary: true,
+    });
   }
 };
 
@@ -20,6 +44,9 @@ export const init = async () => {
   init_pagefind();
 };
 export const destroy = async () => {
+  if (pagefind) {
+    await pagefind.destroy();
+  }
   pagefind = undefined;
   initial_options = undefined;
 };
