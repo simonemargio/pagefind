@@ -21,5 +21,4 @@ steps:
       // Perform a verbose search to get execution environment info
       let search = await pagefind.search("beet-root", { verbose: true });
 
-      // Assert that search runs on main thread
       toolproof.assert_eq(search.search_environment, "mainthread");

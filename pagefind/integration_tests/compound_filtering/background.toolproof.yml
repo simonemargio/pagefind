@@ -72,6 +72,7 @@ steps:
 
       window.test = async function(pagefind_incantation) {
           let search = await pagefind_incantation;
+          window.searchres = search;
           let data = await Promise.all(search.results.map(result => result.data()));
 
           document.querySelector('[data-results]').innerText = data.map(d => d.url).sort().join(', ');

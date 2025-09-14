@@ -75,7 +75,7 @@ Set the maximum length for generated excerpts. Defaults to `30`.
 }
 ```
 
-If set, Pagefind will add the search term as a query parameter under the same name. 
+If set, Pagefind will add the search term as a query parameter under the same name.
 
 If using the [Pagefind highlight script](/docs/highlighting/), make sure this is configured to match.
 
@@ -90,3 +90,15 @@ See [multisite search > weighting](/docs/multisite/#changing-the-weighting-of-in
 ### Merge filter
 
 See [multisite search > filtering](/docs/multisite/#filtering-results-by-index)
+
+### Disable web worker
+
+```json
+{
+    "noWorker": true
+}
+```
+
+Defaults to `false`. If set to `true`, forces Pagefind to run all search operations on the main thread instead of using a web worker.
+
+By default, Pagefind will attempt to use a web worker for search operations when available, which helps keep the main thread responsive during searches. If web workers are not supported or fail to initialize, Pagefind will automatically fall back to running on the main thread.

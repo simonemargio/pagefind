@@ -16,19 +16,23 @@ export class PagefindWrapper {
   private basePath: string;
   private initOptions: PagefindIndexOptions;
   private cleanup: FinalizationRegistry<string> | undefined;
+  private initPromise: Promise<void> | null = null;
+  private initialized = false;
 
   private initCleanup() {
-    // Only initialize FinalizationRegistry if it exists (ES2021+)
     if (typeof FinalizationRegistry !== "undefined") {
       this.cleanup = new FinalizationRegistry((dataId: string) => {
         // When result object is GC'd, tell worker to release its data function
         if (this.worker) {
-          this.worker.postMessage({
-            id: `cleanup_${Date.now()}`,
-            method: "releaseData",
-            args: [dataId],
-          });
-          // Don't wait for response - this is just cleanup
+          try {
+            this.worker.postMessage({
+              id: `cleanup_${Date.now()}`,
+              method: "releaseData",
+              args: [dataId],
+            });
+          } catch (e) {
+            // If the worker is dead, that's the ultimate GC :-)
+          }
         }
       });
     }
@@ -51,7 +55,7 @@ export class PagefindWrapper {
     }
 
     this.initCleanup();
-    this.init();
+    this.initPromise = this.init();
   }
 
   private async init() {
@@ -66,6 +70,14 @@ export class PagefindWrapper {
             error,
           );
           this.worker = null;
+
+          // Reject all pending messages
+          const pending = Array.from(this.pendingMessages.values());
+          this.pendingMessages.clear();
+          for (const { reject } of pending) {
+            reject(new Error("Worker failed, falling back to main thread"));
+          }
+
           this.initFallback();
         });
 
@@ -91,6 +103,7 @@ export class PagefindWrapper {
             ),
           ),
         ]);
+        this.initialized = true;
       } catch (error) {
         console.warn(
           "Failed to initialize the Pagefind web worker, falling back to main thread:",
@@ -98,9 +111,11 @@ export class PagefindWrapper {
         );
         this.worker = null;
         this.initFallback();
+        this.initialized = true;
       }
     } else {
       this.initFallback();
+      this.initialized = true;
     }
   }
 
@@ -111,6 +126,13 @@ export class PagefindWrapper {
   }
 
   private async sendMessage(method: string, args: any[]): Promise<any> {
+    // Wait for initialization to complete unless this is the init message itself
+    if (!this.initialized && method !== "init") {
+      if (this.initPromise) {
+        await this.initPromise;
+      }
+    }
+
     if (this.fallback) {
       const fn = (this.fallback as any)[method];
       if (typeof fn === "function") {
@@ -224,7 +246,11 @@ export class PagefindWrapper {
 
   async destroy() {
     if (this.worker) {
-      await this.sendMessage("destroy", []);
+      try {
+        await this.sendMessage("destroy", []);
+      } catch (e) {
+        // May already be dead
+      }
       this.worker.terminate();
       this.worker = null;
     }

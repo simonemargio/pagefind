@@ -14,11 +14,9 @@ steps:
     js: |-
       let pagefind = await import("/pagefind/pagefind.js");
 
-      // Initialize Pagefind
       await pagefind.init();
 
       // Perform a verbose search to get execution environment info
       let search = await pagefind.search("beet-root", { verbose: true });
 
-      // Assert that search runs in web worker
       toolproof.assert_eq(search.search_environment, "webworker");

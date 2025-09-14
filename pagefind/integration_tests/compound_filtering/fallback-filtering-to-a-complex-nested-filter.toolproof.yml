@@ -1,0 +1,31 @@
+name: (Mainthread Fallback) Filtering > Filtering to a complex nested filter
+steps:
+  - ref: ./background.toolproof.yml
+  - step: In my browser, I evaluate {js}
+    js: |-
+      await pagefind.options({ noWorker: true });
+
+      await test(pagefind.search("Cat", {
+          verbose: true,
+          filters: {
+              any: [{
+                  color: {
+                      any: [{
+                          any: ["Tabby"]
+                      }, {
+                          all: ["Black", "White", "Orange"]
+                      }]
+                  }
+              }, {
+                  mood: {
+                      all: ["Nervous", "Pining"]
+                  }
+              }]
+          }
+      }));
+
+      toolproof.assert_eq(window.searchres.search_environment, "mainthread");
+  - step: In my browser, I evaluate {js}
+    js: |-
+      let val = await toolproof.querySelector("[data-results]");
+      toolproof.assert_eq(val.innerHTML, `/ali/, /grey/, /treacle/`);

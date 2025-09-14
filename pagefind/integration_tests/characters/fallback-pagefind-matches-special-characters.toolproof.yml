@@ -1,0 +1,32 @@
+name: (Mainthread Fallback) Character Tests > Pagefind matches special characters
+steps:
+  - ref: ./background.toolproof.yml
+  - step: I have a "public/apiary/index.html" file with the content {html}
+    html: >-
+      <!DOCTYPE html><html
+      lang="en"><head></head><body><h1>Béës</h1></body></html>
+  - macro: I run Pagefind
+  - step: stdout should contain "Running Pagefind"
+  - step: The file "public/pagefind/pagefind.js" should not be empty
+  - step: I serve the directory "public"
+  - step: In my browser, I load "/"
+  - step: In my browser, I evaluate {js}
+    js: >-
+      let pagefind = await import("/pagefind/pagefind.js");
+
+      // Force fallback to main thread by disabling worker
+
+      await pagefind.options({ noWorker: true });
+
+      let search = await pagefind.search("Béës", { verbose: true });
+
+      toolproof.assert_eq(search.search_environment, "mainthread");
+
+      let pages = await Promise.all(search.results.map(r => r.data()));
+
+      document.querySelector('[data-result]').innerText = pages.map(p =>
+      p.url).join(", ");
+  - step: In my browser, I evaluate {js}
+    js: |-
+      let val = await toolproof.querySelector("[data-result]");
+      toolproof.assert_eq(val.innerHTML, `/apiary/`);
