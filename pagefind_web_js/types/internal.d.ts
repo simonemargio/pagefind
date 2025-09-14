@@ -1,10 +1,5 @@
 import "pagefindWeb";
 
-export type PagefindInternalOption = {
-  /** Whether we return a marker for each result's data, or a hydrated data function */
-  returnDataFunctions: boolean;
-};
-
 export type PagefindEntryJson = {
   version: string;
   languages: Record<string, PagefindEntryLanguage>;
