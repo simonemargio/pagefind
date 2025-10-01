@@ -41,7 +41,7 @@ LLVM_TRIPLES_TO_PYTHON_WHEEL_PLATFORMS = {
     # TODO: check the python platforms are correct.
     "aarch64-apple-darwin": "macosx_12_0_arm64",
     "aarch64-unknown-linux-musl": "manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64",
-    "x86_64-apple-darwin": "macosx_12_0_arm64",
+    "x86_64-apple-darwin": "macosx_12_0_x86_64",
     "x86_64-pc-windows-msvc": "win_amd64",
     # "x86_64-unknown-freebsd": "freebsd_11_4_amd64",  # FreeBSD not supported by PyPI
     "x86_64-unknown-linux-musl": "manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64",
