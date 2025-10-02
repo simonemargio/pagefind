@@ -1,0 +1,43 @@
+name: (Mainthread Fallback) Debounced Searches > Debounce with options
+steps:
+  - ref: ./background.toolproof.yml
+  - step: I have a "public/cat/index.html" file with the content {html}
+    html: >-
+      <!DOCTYPE html><html
+      lang="en"><head></head><body><h1>world</h1></body></html>
+  - macro: I run Pagefind
+  - step: stdout should contain "Running Pagefind"
+  - step: The file "public/pagefind/pagefind.js" should not be empty
+  - step: I serve the directory "public"
+  - step: In my browser, I load "/"
+  - step: In my browser, I evaluate {js}
+    js: >-
+      let pagefind = await import("/pagefind/pagefind.js");
+
+      await pagefind.options({ noWorker: true });
+
+      let results = await Promise.all([
+          pagefind.debouncedSearch("a", { verbose: true, filters: {} }),
+          pagefind.debouncedSearch("w", { verbose: true, filters: {} }),
+          pagefind.debouncedSearch("wo", { verbose: true, filters: {} }),
+          pagefind.debouncedSearch("wor", { verbose: true, filters: {} }),
+          pagefind.debouncedSearch("worl", { verbose: true, filters: {} })
+      ]);
+
+
+      document.querySelector('[data-types]').innerText = results.map(r => (r ===
+      null ? "null" : r.results.length)).join(', ');
+
+      toolproof.assert_eq(results[4].search_environment, "mainthread");
+      let pages = await Promise.all(results[4].results.map(r => r.data()));
+
+      document.querySelector('[data-last]').innerText = pages.map(p =>
+      p.url).sort().join(", ");
+  - step: In my browser, I evaluate {js}
+    js: |-
+      let val = await toolproof.querySelector("[data-types]");
+      toolproof.assert_eq(val.innerHTML, `null, null, null, null, 1`);
+  - step: In my browser, I evaluate {js}
+    js: |-
+      let val = await toolproof.querySelector("[data-last]");
+      toolproof.assert_eq(val.innerHTML, `/cat/`);

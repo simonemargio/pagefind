@@ -30,6 +30,11 @@ steps:
     js: window.pui.triggerSearch("garbage");
   - step: In my browser, the console should be empty
   - step: In my browser, I evaluate {js}
-    js: |-
+    js: |
+      // Waiting for the results to be populated
+      await toolproof.waitFor(async () => {
+        const message = await toolproof.querySelector(".pagefind-ui__message");
+        return message && message.innerHTML.includes("is oh no");
+      });
       let val = await toolproof.querySelector(".pagefind-ui__message");
       toolproof.assert_eq(val.innerHTML, `garbage is oh no`);

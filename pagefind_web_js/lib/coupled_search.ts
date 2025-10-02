@@ -11,8 +11,9 @@ const asyncSleep = async (ms = 100) => {
   return new Promise((r) => setTimeout(r, ms));
 };
 
-// Check if running in browser environment
-const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+// Environment detection
+const isBrowser = () =>
+  typeof window !== "undefined" && typeof document !== "undefined";
 
 export class PagefindInstance {
   backend: any;
@@ -48,27 +49,30 @@ export class PagefindInstance {
     this.decoder = new TextDecoder("utf-8");
     this.wasm = null;
 
-    this.basePath = opts.basePath || "/pagefind/";
-    this.primary = opts.primary || false;
-    if (this.primary && !opts.basePath) {
-      this.initPrimary();
+    let basePath = opts.basePath || "/pagefind/";
+    let primary = opts.primary || false;
+
+    if (primary && !opts.basePath && isBrowser()) {
+      basePath = this.initPrimaryBasePath(basePath);
     }
-    if (/[^\/]$/.test(this.basePath)) {
-      this.basePath = `${this.basePath}/`;
+    if (/[^\/]$/.test(basePath)) {
+      basePath = `${basePath}/`;
     }
     if (
-      isBrowser &&
+      isBrowser() &&
       window?.location?.origin &&
-      this.basePath.startsWith(window.location.origin)
+      basePath.startsWith(window.location.origin)
     ) {
-      this.basePath = this.basePath.replace(window.location.origin, "");
+      basePath = basePath.replace(window.location.origin, "");
     }
 
-    this.baseUrl = opts.baseUrl || this.defaultBaseUrl();
+    this.basePath = basePath;
+    this.baseUrl = opts.baseUrl || this.getDefaultBaseUrl(basePath);
     if (!/^(\/|https?:\/\/)/.test(this.baseUrl)) {
       this.baseUrl = `/${this.baseUrl}`;
     }
 
+    this.primary = primary;
     this.indexWeight = opts.indexWeight ?? 1;
     this.excerptLength = opts.excerptLength ?? 30;
     this.mergeFilter = opts.mergeFilter ?? {};
@@ -84,11 +88,11 @@ export class PagefindInstance {
     this.languages = null;
   }
 
-  initPrimary() {
-    if (isBrowser && typeof import.meta.url !== 'undefined') {
+  private initPrimaryBasePath(basePath: string): string {
+    if (typeof import.meta.url !== "undefined") {
       let derivedBasePath = import.meta.url.match(/^(.*\/)pagefind.js.*$/)?.[1];
       if (derivedBasePath) {
-        this.basePath = derivedBasePath;
+        return derivedBasePath;
       } else {
         console.warn(
           [
@@ -98,16 +102,16 @@ export class PagefindInstance {
         );
       }
     }
+    return basePath;
   }
 
-  defaultBaseUrl() {
-    let default_base = this.basePath.match(/^(.*\/)_?pagefind/)?.[1];
+  private getDefaultBaseUrl(basePath: string): string {
+    let default_base = basePath.match(/^(.*\/)_?pagefind/)?.[1];
     return default_base || "/";
   }
 
   async options(options: PagefindIndexOptions) {
     const opts = [
-      "basePath",
       "baseUrl",
       "indexWeight",
       "excerptLength",
@@ -123,7 +127,6 @@ export class PagefindInstance {
       } else if (k === "ranking") {
         await this.set_ranking(options.ranking);
       } else if (opts.includes(k)) {
-        if (k === "basePath" && typeof v === "string") this.basePath = v;
         if (k === "baseUrl" && typeof v === "string") this.baseUrl = v;
         if (k === "indexWeight" && typeof v === "number") this.indexWeight = v;
         if (k === "excerptLength" && typeof v === "number")
@@ -131,7 +134,7 @@ export class PagefindInstance {
         if (k === "mergeFilter" && typeof v === "object") this.mergeFilter = v;
         if (k === "highlightParam" && typeof v === "string")
           this.highlightParam = v;
-      } else {
+      } else if (!["basePath"].includes(k)) {
         console.warn(
           `Unknown Pagefind option ${k}. Allowed options: [${opts.join(", ")}]`,
         );
@@ -696,14 +699,12 @@ export class PagefindInstance {
 }
 
 export class Pagefind {
-  backend: any;
   primaryLanguage: string;
   searchID: number;
   primary: PagefindInstance;
   instances: PagefindInstance[];
 
   constructor(options: PagefindIndexOptions = {}) {
-    this.backend = wasm_bindgen;
     this.primaryLanguage = "unknown";
     this.searchID = 0;
 
@@ -727,10 +728,14 @@ export class Pagefind {
   }
 
   async init(overrideLanguage?: string) {
-    if (isBrowser && document?.querySelector) {
+    if (isBrowser() && document?.querySelector) {
       const langCode =
         document.querySelector("html")?.getAttribute("lang") || "unknown";
       this.primaryLanguage = langCode.toLocaleLowerCase();
+    }
+
+    if (overrideLanguage) {
+      this.primaryLanguage = overrideLanguage;
     }
 
     await this.primary.init(
@@ -751,6 +756,7 @@ export class Pagefind {
     let newInstance = new PagefindInstance({
       primary: false,
       basePath: indexPath,
+      ...options,
     });
     this.instances.push(newInstance);
 
@@ -763,8 +769,9 @@ export class Pagefind {
     await newInstance.init(options.language || this.primaryLanguage, {
       load_wasm: false,
     });
-    delete options["language"];
-    await newInstance.options(options);
+
+    const { language, ...remainingOptions } = options;
+    await newInstance.options(remainingOptions);
   }
 
   mergeFilters(filters: PagefindFilterCounts[]) {

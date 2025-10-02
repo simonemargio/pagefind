@@ -36,6 +36,13 @@ declare global {
      * Provides the ability to fine tune Pagefind's ranking algorithm to better suit your dataset.
      */
     ranking?: PagefindRankingWeights;
+    /**
+     * Force Pagefind to run on the main thread instead of using a web worker.
+     *
+     * By default, Pagefind will use a web worker for search operations when available,
+     * falling back to the main thread if workers are not supported or fail to initialize.
+     */
+    noWorker?: boolean;
   };
 
   type PagefindRankingWeights = {
@@ -122,6 +129,8 @@ declare global {
     }[];
     /** Verbose information on stemming returned in the Pagefind Playground */
     search_keywords?: string[];
+    /** Verbose information on what environment the Pagefind search was executed in [worker, mainthread] */
+    search_environment?: string;
   };
 
   /** A single result from a search query, before actual data has been loaded */
