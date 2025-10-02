@@ -535,7 +535,7 @@ impl SearchIndex {
     }
 }
 
-pub fn stems_from_term(term: &str) -> Vec<Cow<str>> {
+pub fn stems_from_term<'a>(term: &'a str) -> Vec<Cow<'a, str>> {
     if term.trim().is_empty() {
         return vec![];
     }
